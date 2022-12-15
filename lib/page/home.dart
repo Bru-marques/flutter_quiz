@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatelessWidget {
+import 'data.dart';
+
+QuestionList _questionList = QuestionList();
+
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+List<Widget> stars = [];
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,20 +68,21 @@ class Home extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Row(
-                children: [
-                  Icon(Icons.star,
-                      size: 38, color: Colors.white.withOpacity(.2)),
-                  Icon(Icons.star,
-                      size: 38, color: Colors.white.withOpacity(.2)),
-                  Icon(Icons.star,
-                      size: 38, color: Colors.white.withOpacity(.2)),
-                  Icon(Icons.star,
-                      size: 38, color: Colors.white.withOpacity(.2)),
-                  Icon(Icons.star,
-                      size: 38, color: Colors.white.withOpacity(.2)),
-                ],
-              )
+              Row(children: stars
+                  // <Widget>[
+                  //   stars
+                  // Icon(Icons.star,
+                  //     size: 38, color: Colors.white.withOpacity(.2)),
+                  // Icon(Icons.star,
+                  //     size: 38, color: Colors.white.withOpacity(.2)),
+                  // Icon(Icons.star,
+                  //     size: 38, color: Colors.white.withOpacity(.2)),
+                  // Icon(Icons.star,
+                  //     size: 38, color: Colors.white.withOpacity(.2)),
+                  // Icon(Icons.star,
+                  //     size: 38, color: Colors.white.withOpacity(.2)),
+                  // ],
+                  )
             ],
           ),
         ],
@@ -79,13 +91,19 @@ class Home extends StatelessWidget {
   }
 
   Widget _question() {
-    return const Text(
-      textAlign: TextAlign.center,
-      'The blue whale is the biggest animal to have ever lived.',
-      style: TextStyle(
-        fontSize: 28,
-        color: Colors.black87,
-        fontWeight: FontWeight.bold,
+    return Card(
+      elevation: 1.5,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+        child: Text(
+          textAlign: TextAlign.center,
+          _questionList.getQuestion(),
+          style: const TextStyle(
+            fontSize: 28,
+            color: Color(0xff343434),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
@@ -103,7 +121,21 @@ class Home extends StatelessWidget {
 
   Widget _button(String title, IconData icon) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        setState(() {
+          if (title.toLowerCase() == _questionList.getAnswer().toString()) {
+            stars.add(
+              const Icon(Icons.star, size: 38, color: Colors.yellowAccent),
+            );
+          } else {
+            stars.add(
+              Icon(Icons.star, size: 38, color: Colors.black.withOpacity(.2)),
+            );
+          }
+
+          _questionList.nextQuestion();
+        });
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xff6158E0),
       ),
